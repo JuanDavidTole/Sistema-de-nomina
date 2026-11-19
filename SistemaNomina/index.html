@@ -1,0 +1,1197 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NóminaPro - Empresa X</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f1f5f9;color:#1e293b}
+header{background:#142b4a;color:white;padding:25px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+header h1{font-size:25px}
+header p{color:#cbd5e1;margin-top:6px;font-size:13px}
+.container{max-width:1250px;margin:25px auto;padding:0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:15px;margin-bottom:22px}
+.card{background:white;padding:20px;border-radius:12px;box-shadow:0 3px 12px #0000000b;margin-bottom:18px}
+.stat{border-left:4px solid #2563eb}
+.stat small{color:#64748b}
+.stat h2{font-size:25px;margin-top:10px;color:#142b4a}
+h3{margin-bottom:17px;color:#142b4a}
+h4{margin:15px 0 10px;color:#334155}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+button{border:0;border-radius:7px;padding:11px 17px;cursor:pointer;font-weight:bold}
+.tab{background:white;color:#334155}
+.tab.active{background:#2563eb;color:white}
+.primary{background:#2563eb;color:white}
+.success{background:#059669;color:white}
+.danger{background:#dc2626;color:white}
+.secondary{background:#e2e8f0;color:#334155}
+button:hover{opacity:.85}
+.section{display:none}
+.section.active{display:block}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:bold;color:#475569}
+input,select{padding:11px;border:1px solid #cbd5e1;border-radius:7px;width:100%;font-size:14px;background:white}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #e2e8f0;font-size:13px}
+th{background:#f8fafc;color:#475569}
+.table-wrap{overflow-x:auto}
+.result{background:#eff6ff;padding:16px;border-radius:9px;margin-top:15px}
+.result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #dbeafe;gap:10px}
+.total{font-size:21px;font-weight:bold;color:#047857}
+.muted{color:#64748b;font-size:12px;margin-top:8px;line-height:1.5}
+.badge{background:#dbeafe;color:#1d4ed8;padding:5px 9px;border-radius:20px;font-size:11px}
+.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:12px;border-radius:8px;font-size:13px;line-height:1.5;margin-top:12px}
+footer{text-align:center;padding:25px;color:#64748b;font-size:12px}
+
+@media(max-width:600px){
+header{padding:20px}
+.container{padding:0 10px}
+.card{padding:15px}
+}
+
+@media print{
+header,.tabs,.no-print,footer{display:none!important}
+body{background:white}
+.container{margin:0;max-width:100%}
+.card{box-shadow:none;border:1px solid #ddd}
+.section{display:none!important}
+#comprobante{display:block!important}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div>
+<h1>🏢 NóminaPro</h1>
+<p>Sistema de gestión y liquidación de nómina</p>
+</div>
+<span class="badge">Empresa X | Colombia</span>
+</header>
+
+<div class="container">
+
+<!-- PANEL PRINCIPAL -->
+
+<div class="grid">
+<div class="card stat">
+<small>Empleados registrados</small>
+<h2 id="totalEmpleados">0</h2>
+</div>
+
+<div class="card stat">
+<small>Nóminas liquidadas</small>
+<h2 id="totalNominas">0</h2>
+</div>
+
+<div class="card stat">
+<small>Total neto pagado</small>
+<h2 id="totalPagado">$0</h2>
+</div>
+
+<div class="card stat">
+<small>Salario mínimo configurado</small>
+<h2 id="salarioResumen">$0</h2>
+</div>
+</div>
+
+<!-- MENU -->
+
+<div class="tabs no-print">
+<button class="tab active" onclick="mostrar('inicio',this)">Inicio</button>
+<button class="tab" onclick="mostrar('empleados',this)">Empleados</button>
+<button class="tab" onclick="mostrar('liquidacion',this)">Liquidar nómina</button>
+<button class="tab" onclick="mostrar('historial',this)">Historial</button>
+<button class="tab" onclick="mostrar('configuracion',this)">Configuración</button>
+</div>
+
+<!-- INICIO -->
+
+<section id="inicio" class="section active">
+<div class="card">
+<h3>Bienvenido a NóminaPro</h3>
+
+<p>Administra los empleados de la empresa, registra sus horas extras, calcula deducciones y genera comprobantes de pago.</p>
+
+<br>
+<p><b>Proceso de liquidación:</b></p>
+<p>1. Registra los empleados.</p>
+<p>2. Selecciona el empleado y el período.</p>
+<p>3. Registra las horas extras y recargos.</p>
+<p>4. Calcula y guarda la nómina.</p>
+<p>5. Consulta e imprime el comprobante.</p>
+
+<div class="notice">
+Sistema académico. Los parámetros laborales deben verificarse según la normativa vigente antes de utilizarse en nóminas reales.
+</div>
+</div>
+</section>
+
+<!-- EMPLEADOS -->
+
+<section id="empleados" class="section">
+
+<div class="card">
+<h3>Registro de empleados</h3>
+
+<form id="formEmpleado">
+
+<div class="form-grid">
+
+<div class="field">
+<label>Identificación</label>
+<input id="documento" required placeholder="Número de documento">
+</div>
+
+<div class="field">
+<label>Nombres y apellidos</label>
+<input id="nombre" required placeholder="Nombre completo">
+</div>
+
+<div class="field">
+<label>Cargo</label>
+<input id="cargo" required placeholder="Cargo">
+</div>
+
+<div class="field">
+<label>Fecha de ingreso</label>
+<input id="ingreso" type="date" required>
+</div>
+
+<div class="field">
+<label>Salario mensual</label>
+<input id="salario" type="number" min="0" required>
+</div>
+
+<div class="field">
+<label>¿Tiene derecho a auxilio de transporte?</label>
+<select id="tieneAuxilio">
+<option value="si">Sí</option>
+<option value="no">No</option>
+</select>
+</div>
+
+<div class="field">
+<label>Tipo de contrato</label>
+<select id="contrato">
+<option>Indefinido</option>
+<option>Fijo</option>
+<option>Obra o labor</option>
+<option>Aprendizaje</option>
+</select>
+</div>
+
+<div class="field">
+<label>Estado</label>
+<select id="estadoEmpleado">
+<option>Activo</option>
+<option>Inactivo</option>
+</select>
+</div>
+
+</div>
+
+<div class="actions">
+<button class="primary" type="submit">Guardar empleado</button>
+<button class="secondary" type="reset">Limpiar</button>
+</div>
+
+</form>
+</div>
+
+<div class="card">
+<h3>Listado de empleados</h3>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Documento</th>
+<th>Empleado</th>
+<th>Cargo</th>
+<th>Salario</th>
+<th>Estado</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody id="tablaEmpleados"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- LIQUIDACION -->
+
+<section id="liquidacion" class="section">
+
+<div class="card">
+<h3>Liquidación de nómina</h3>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Empleado</label>
+<select id="empleadoNomina">
+<option value="">Seleccione un empleado</option>
+</select>
+</div>
+
+<div class="field">
+<label>Fecha inicial</label>
+<input type="date" id="fechaInicio">
+</div>
+
+<div class="field">
+<label>Fecha final</label>
+<input type="date" id="fechaFin">
+</div>
+
+<div class="field">
+<label>Días liquidados (1 a 30)</label>
+<input type="number" id="dias" value="30" min="1" max="30">
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h3>Horas extras y recargos</h3>
+
+<p class="muted">
+Registra las horas efectivamente trabajadas durante el período.
+</p>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Horas extras diurnas (25%)</label>
+<input type="number" id="extraDiurna" min="0" step=".5" value="0">
+</div>
+
+<div class="field">
+<label>Horas extras nocturnas (75%)</label>
+<input type="number" id="extraNocturna" min="0" step=".5" value="0">
+</div>
+
+<div class="field">
+<label>Horas con recargo nocturno (35%)</label>
+<input type="number" id="recargoNocturno" min="0" step=".5" value="0">
+</div>
+
+<div class="field">
+<label>Horas dominicales y festivas (90%)</label>
+<input type="number" id="dominical" min="0" step=".5" value="0">
+</div>
+
+<div class="field">
+<label>Horas dominicales nocturnas</label>
+<input type="number" id="dominicalNocturno" min="0" step=".5" value="0">
+</div>
+
+</div>
+
+<div class="notice">
+Las horas dominicales nocturnas y las horas extras en domingos o festivos requieren validar los recargos que concurren. Este formulario utiliza un modelo académico simplificado.
+</div>
+</div>
+
+<div class="card">
+<h3>Otros conceptos de nómina</h3>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Bonificaciones salariales</label>
+<input type="number" id="bonificaciones" min="0" value="0">
+</div>
+
+<div class="field">
+<label>Comisiones salariales</label>
+<input type="number" id="comisiones" min="0" value="0">
+</div>
+
+<div class="field">
+<label>Otros devengados salariales</label>
+<input type="number" id="otrosDevengados" min="0" value="0">
+</div>
+
+<div class="field">
+<label>Otros descuentos</label>
+<input type="number" id="otrosDescuentos" min="0" value="0">
+</div>
+
+<div class="field">
+<label>Anticipos de nómina</label>
+<input type="number" id="anticipos" min="0" value="0">
+</div>
+
+</div>
+
+<div class="actions no-print">
+<button class="primary" onclick="calcularNomina()">Calcular nómina</button>
+</div>
+</div>
+
+<div class="card" id="resultado" style="display:none">
+
+<h3>Resultado de la liquidación</h3>
+
+<div id="detalleResultado"></div>
+
+<div class="actions no-print">
+<button class="success" onclick="guardarNomina()">Guardar nómina</button>
+<button class="secondary" onclick="imprimirComprobanteActual()">Imprimir comprobante</button>
+</div>
+
+</div>
+</section>
+
+<!-- HISTORIAL -->
+
+<section id="historial" class="section">
+<div class="card">
+<h3>Historial de nóminas</h3>
+
+<div class="actions no-print">
+<button class="success" onclick="exportarCSV()">Exportar a Excel (CSV)</button>
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Empleado</th>
+<th>Período</th>
+<th>Devengado</th>
+<th>Deducciones</th>
+<th>Neto a pagar</th>
+<th>Acciones</th>
+</tr>
+</thead>
+<tbody id="tablaNominas"></tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- CONFIGURACION -->
+
+<section id="configuracion" class="section">
+<div class="card">
+
+<h3>Configuración laboral y salarial</h3>
+
+<p class="muted">Puedes modificar los valores según el año y la normativa aplicable.</p>
+
+<div class="form-grid">
+
+<div class="field">
+<label>Salario mínimo mensual</label>
+<input type="number" id="cfgSalario" min="0">
+</div>
+
+<div class="field">
+<label>Auxilio de transporte</label>
+<input type="number" id="cfgAuxilio" min="0">
+</div>
+
+<div class="field">
+<label>Salud trabajador (%)</label>
+<input type="number" id="cfgSalud" min="0" step=".1">
+</div>
+
+<div class="field">
+<label>Pensión trabajador (%)</label>
+<input type="number" id="cfgPension" min="0" step=".1">
+</div>
+
+<div class="field">
+<label>Recargo nocturno (%)</label>
+<input type="number" id="cfgNocturno" min="0">
+</div>
+
+<div class="field">
+<label>Hora extra diurna (%)</label>
+<input type="number" id="cfgExtraD" min="0">
+</div>
+
+<div class="field">
+<label>Hora extra nocturna (%)</label>
+<input type="number" id="cfgExtraN" min="0">
+</div>
+
+<div class="field">
+<label>Recargo dominical/festivo (%)</label>
+<input type="number" id="cfgDominical" min="0">
+</div>
+
+<div class="field">
+<label>Horas laborales semanales</label>
+<input type="number" id="cfgJornada" min="1">
+</div>
+
+<div class="field">
+<label>Divisor mensual para valor hora</label>
+<input type="number" id="cfgDivisor" min="1">
+</div>
+
+</div>
+
+<div class="actions">
+<button class="primary" onclick="guardarConfiguracion()">Guardar configuración</button>
+<button class="secondary" onclick="restaurarConfiguracion()">Restaurar valores iniciales</button>
+</div>
+</div>
+</section>
+
+<!-- COMPROBANTE -->
+
+<section id="comprobante" class="section">
+<div class="card">
+<h3>COMPROBANTE DE PAGO DE NÓMINA</h3>
+<div id="contenidoComprobante"></div>
+</div>
+</section>
+
+</div>
+
+<footer>
+NóminaPro | Sistema académico de gestión de nómina | Empresa X
+</footer>
+
+<script>
+
+// ==================================
+// CONFIGURACIÓN INICIAL
+// ==================================
+
+const valoresIniciales = {
+ salarioMinimo:1750905,
+ auxilio:249095,
+ salud:4,
+ pension:4,
+ nocturno:35,
+ extraD:25,
+ extraN:75,
+ dominical:90,
+ jornada:42,
+ divisor:210
+};
+
+let config = JSON.parse(localStorage.getItem("nominaConfig")) || {...valoresIniciales};
+let empleados = JSON.parse(localStorage.getItem("nominaEmpleados")) || [];
+let nominas = JSON.parse(localStorage.getItem("nominaRegistros")) || [];
+let calculoActual = null;
+
+const dinero = v => new Intl.NumberFormat("es-CO",{
+ style:"currency",
+ currency:"COP",
+ maximumFractionDigits:0
+}).format(v || 0);
+
+const numero = id => {
+ const v = Number(document.getElementById(id).value);
+ return Number.isFinite(v) && v > 0 ? v : 0;
+};
+
+function guardarDatos(){
+ localStorage.setItem("nominaConfig",JSON.stringify(config));
+ localStorage.setItem("nominaEmpleados",JSON.stringify(empleados));
+ localStorage.setItem("nominaRegistros",JSON.stringify(nominas));
+}
+
+// ==================================
+// NAVEGACIÓN
+// ==================================
+
+function mostrar(id,boton){
+ document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+
+ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+
+ if(boton) boton.classList.add("active");
+}
+
+// ==================================
+// ACTUALIZAR PANEL
+// ==================================
+
+function actualizar(){
+
+ document.getElementById("totalEmpleados").textContent=empleados.length;
+
+ document.getElementById("totalNominas").textContent=nominas.length;
+
+ document.getElementById("salarioResumen").textContent=dinero(config.salarioMinimo);
+
+ document.getElementById("totalPagado").textContent=dinero(
+  nominas.reduce((s,n)=>s+n.neto,0)
+ );
+
+ mostrarEmpleados();
+ llenarSelectEmpleados();
+ mostrarNominas();
+}
+
+// ==================================
+// REGISTRAR EMPLEADOS
+// ==================================
+
+document.getElementById("formEmpleado").addEventListener("submit",e=>{
+
+ e.preventDefault();
+
+ const documento=document.getElementById("documento").value.trim();
+
+ if(empleados.some(x=>x.documento===documento)){
+  alert("Ya existe un empleado con ese documento.");
+  return;
+ }
+
+ const salario=numero("salario");
+
+ if(salario<config.salarioMinimo){
+  alert("El salario no puede ser inferior al mínimo configurado. Verifica las excepciones legales.");
+  return;
+ }
+
+ const empleado={
+  id:Date.now(),
+  documento,
+  nombre:document.getElementById("nombre").value.trim(),
+  cargo:document.getElementById("cargo").value.trim(),
+  ingreso:document.getElementById("ingreso").value,
+  salario,
+  tieneAuxilio:document.getElementById("tieneAuxilio").value==="si",
+  contrato:document.getElementById("contrato").value,
+  estado:document.getElementById("estadoEmpleado").value
+ };
+
+ empleados.push(empleado);
+
+ guardarDatos();
+ actualizar();
+
+ e.target.reset();
+
+ alert("Empleado registrado correctamente.");
+
+});
+
+function mostrarEmpleados(){
+
+ const tabla=document.getElementById("tablaEmpleados");
+ tabla.innerHTML="";
+
+ empleados.forEach(e=>{
+
+  const fila=document.createElement("tr");
+
+  [e.documento,e.nombre,e.cargo,dinero(e.salario),e.estado].forEach(v=>{
+   const td=document.createElement("td");
+   td.textContent=v;
+   fila.appendChild(td);
+  });
+
+  const td=document.createElement("td");
+
+  const btn=document.createElement("button");
+  btn.className="danger";
+  btn.textContent="Eliminar";
+  btn.onclick=()=>eliminarEmpleado(e.id);
+
+  td.appendChild(btn);
+  fila.appendChild(td);
+  tabla.appendChild(fila);
+
+ });
+}
+
+function eliminarEmpleado(id){
+
+ if(!confirm("¿Eliminar este empleado?")) return;
+
+ empleados=empleados.filter(e=>e.id!==id);
+
+ guardarDatos();
+ actualizar();
+}
+
+function llenarSelectEmpleados(){
+
+ const select=document.getElementById("empleadoNomina");
+ const actual=select.value;
+
+ select.innerHTML='<option value="">Seleccione un empleado</option>';
+
+ empleados.filter(e=>e.estado==="Activo").forEach(e=>{
+
+  const op=document.createElement("option");
+  op.value=e.id;
+  op.textContent=e.nombre+" - "+e.documento;
+
+  select.appendChild(op);
+
+ });
+
+ if(empleados.some(e=>String(e.id)===actual)){
+  select.value=actual;
+ }
+
+}
+
+// ==================================
+// CALCULAR NÓMINA
+// ==================================
+
+function calcularNomina(){
+
+ const id=Number(document.getElementById("empleadoNomina").value);
+
+ const empleado=empleados.find(e=>e.id===id);
+
+ if(!empleado){
+  alert("Selecciona un empleado.");
+  return;
+ }
+
+ const dias=numero("dias");
+
+ const inicio=document.getElementById("fechaInicio").value;
+ const fin=document.getElementById("fechaFin").value;
+
+ if(dias<1||dias>30){
+  alert("Los días deben estar entre 1 y 30.");
+  return;
+ }
+
+ if(!inicio||!fin||fin<inicio){
+  alert("Ingresa un período válido.");
+  return;
+ }
+
+ const horas={
+  extraD:numero("extraDiurna"),
+  extraN:numero("extraNocturna"),
+  nocturno:numero("recargoNocturno"),
+  dominical:numero("dominical"),
+  dominicalN:numero("dominicalNocturno")
+ };
+
+ const totalExtras=horas.extraD+horas.extraN;
+
+ if(totalExtras>12*Math.ceil(dias/7)){
+  alert("Verifica el límite semanal de horas extras. Debes revisar las horas por día y semana.");
+  return;
+ }
+
+ const valorHora=empleado.salario/config.divisor;
+
+ const salarioBase=empleado.salario*dias/30;
+
+ const auxilio=empleado.tieneAuxilio &&
+ empleado.salario<=config.salarioMinimo*2
+ ? config.auxilio*dias/30 : 0;
+
+ // HORAS EXTRAS
+
+ const pagoExtraD=
+ horas.extraD*valorHora*(1+config.extraD/100);
+
+ const pagoExtraN=
+ horas.extraN*valorHora*(1+config.extraN/100);
+
+ // RECARGOS ORDINARIOS
+
+ const pagoNocturno=
+ horas.nocturno*valorHora*config.nocturno/100;
+
+ const pagoDominical=
+ horas.dominical*valorHora*config.dominical/100;
+
+ const pagoDominicalN=
+ horas.dominicalN*valorHora*
+ (config.dominical+config.nocturno)/100;
+
+ // OTROS DEVENGADOS
+
+ const bonificaciones=numero("bonificaciones");
+ const comisiones=numero("comisiones");
+ const otros=numero("otrosDevengados");
+
+ const extras=pagoExtraD+pagoExtraN;
+
+ const recargos=pagoNocturno+pagoDominical+pagoDominicalN;
+
+ // BASE DE COTIZACIÓN ESTIMADA
+
+ const ibc=salarioBase+extras+recargos+
+ bonificaciones+comisiones+otros;
+
+ // DEDUCCIONES
+
+ const salud=ibc*config.salud/100;
+ const pension=ibc*config.pension/100;
+
+ const anticipos=numero("anticipos");
+ const otrosDescuentos=numero("otrosDescuentos");
+
+ // TOTAL DEVENGADO
+
+ const devengado=salarioBase+auxilio+extras+recargos+
+ bonificaciones+comisiones+otros;
+
+ // TOTAL DEDUCCIONES
+
+ const deducciones=salud+pension+anticipos+otrosDescuentos;
+
+ const neto=devengado-deducciones;
+
+ if(neto<0){
+  alert("Las deducciones superan los devengados.");
+  return;
+ }
+
+ // ==================================
+ // PRESTACIONES SOCIALES
+ // ==================================
+
+ // Base para prima y cesantías:
+ // IBC estimado más auxilio de transporte.
+
+ const basePrestaciones=ibc+auxilio;
+
+ // PRIMA DE SERVICIOS
+
+ const prima=basePrestaciones*dias/360;
+
+ // CESANTÍAS
+
+ const cesantias=basePrestaciones*dias/360;
+
+ // INTERESES DE CESANTÍAS
+
+ const interesesCesantias=
+ cesantias*0.12*dias/360;
+
+ // VACACIONES
+ // No incluyen auxilio de transporte.
+
+ const vacaciones=ibc*dias/720;
+
+ // ==================================
+ // GUARDAR RESULTADO TEMPORAL
+ // ==================================
+
+ calculoActual={
+  id:Date.now(),
+  empleado:empleado.nombre,
+  documento:empleado.documento,
+  cargo:empleado.cargo,
+  inicio,
+  fin,
+  dias,
+  salarioBase,
+  auxilio,
+  valorHora,
+  ibc,
+  horas,
+  pagoExtraD,
+  pagoExtraN,
+  pagoNocturno,
+  pagoDominical,
+  pagoDominicalN,
+  extras,
+  recargos,
+  bonificaciones,
+  comisiones,
+  otros,
+  salud,
+  pension,
+  anticipos,
+  otrosDescuentos,
+  devengado,
+  deducciones,
+  neto,
+  basePrestaciones,
+  prima,
+  cesantias,
+  interesesCesantias,
+  vacaciones
+ };
+
+ mostrarResultado(calculoActual);
+
+}
+
+// ==================================
+// MOSTRAR RESULTADOS
+// ==================================
+
+function fila(nombre,valor){
+
+ return `
+ <div class="result-row">
+ <span>${nombre}</span>
+ <b>${dinero(valor)}</b>
+ </div>`;
+
+}
+
+function mostrarResultado(n){
+
+ document.getElementById("resultado").style.display="block";
+
+ document.getElementById("detalleResultado").innerHTML=`
+
+ <h4>INFORMACIÓN DEL EMPLEADO</h4>
+
+ <p>${n.empleado} | Documento: ${n.documento}</p>
+ <p>Período: ${n.inicio} al ${n.fin} | ${n.dias} días</p>
+
+ <div class="result">
+
+ <h4>DEVENGADOS</h4>
+
+ ${fila("Salario básico",n.salarioBase)}
+ ${fila("Auxilio de transporte",n.auxilio)}
+ ${fila("Horas extras diurnas",n.pagoExtraD)}
+ ${fila("Horas extras nocturnas",n.pagoExtraN)}
+ ${fila("Recargo nocturno",n.pagoNocturno)}
+ ${fila("Recargo dominical/festivo",n.pagoDominical)}
+ ${fila("Recargo dominical nocturno",n.pagoDominicalN)}
+ ${fila("Bonificaciones",n.bonificaciones)}
+ ${fila("Comisiones",n.comisiones)}
+ ${fila("Otros devengados",n.otros)}
+ ${fila("TOTAL DEVENGADO",n.devengado)}
+
+ <h4>DEDUCCIONES DEL TRABAJADOR</h4>
+
+ ${fila("Salud",n.salud)}
+ ${fila("Pensión",n.pension)}
+ ${fila("Anticipos",n.anticipos)}
+ ${fila("Otros descuentos",n.otrosDescuentos)}
+ ${fila("TOTAL DEDUCCIONES",n.deducciones)}
+
+ <div class="result-row total">
+ <span>NETO A PAGAR</span>
+ <span>${dinero(n.neto)}</span>
+ </div>
+
+ <h4>PRESTACIONES SOCIALES ESTIMADAS</h4>
+
+ ${fila("Base para prima y cesantías",n.basePrestaciones)}
+ ${fila("Prima de servicios",n.prima)}
+ ${fila("Cesantías",n.cesantias)}
+ ${fila("Intereses de cesantías",n.interesesCesantias)}
+ ${fila("Vacaciones",n.vacaciones)}
+
+ </div>
+
+ <p class="muted">
+ IBC estimado: ${dinero(n.ibc)} |
+ Valor hora: ${dinero(n.valorHora)}
+ </p>
+
+ <p class="muted">
+ Las prestaciones sociales son valores informativos y no se suman al neto mensual.
+ </p>
+
+ `;
+
+}
+
+// ==================================
+// GUARDAR NÓMINA
+// ==================================
+
+function guardarNomina(){
+
+ if(!calculoActual){
+  alert("Primero debes calcular la nómina.");
+  return;
+ }
+
+ if(nominas.some(n=>
+ n.documento===calculoActual.documento &&
+ n.inicio===calculoActual.inicio &&
+ n.fin===calculoActual.fin
+ )){
+  alert("Ya existe una nómina para este empleado y período.");
+  return;
+ }
+
+ nominas.push(calculoActual);
+
+ guardarDatos();
+ actualizar();
+
+ alert("Nómina guardada correctamente.");
+
+}
+
+// ==================================
+// HISTORIAL
+// ==================================
+
+function mostrarNominas(){
+
+ const tabla=document.getElementById("tablaNominas");
+
+ tabla.innerHTML="";
+
+ nominas.forEach(n=>{
+
+  const fila=document.createElement("tr");
+
+  [
+   n.empleado,
+   n.inicio+" / "+n.fin,
+   dinero(n.devengado),
+   dinero(n.deducciones),
+   dinero(n.neto)
+  ].forEach(v=>{
+
+   const td=document.createElement("td");
+   td.textContent=v;
+   fila.appendChild(td);
+
+  });
+
+  const td=document.createElement("td");
+
+  const btn=document.createElement("button");
+  btn.className="primary";
+  btn.textContent="Ver";
+
+  btn.onclick=()=>{
+   crearComprobante(n);
+   mostrar("comprobante");
+  };
+
+  td.appendChild(btn);
+  fila.appendChild(td);
+  tabla.appendChild(fila);
+
+ });
+
+}
+
+// ==================================
+// COMPROBANTE
+// ==================================
+
+function crearComprobante(n){
+
+ document.getElementById("contenidoComprobante").innerHTML=`
+
+ <p><b>Empresa:</b> Empresa X</p>
+ <p><b>Empleado:</b> ${n.empleado}</p>
+ <p><b>Documento:</b> ${n.documento}</p>
+ <p><b>Cargo:</b> ${n.cargo}</p>
+ <p><b>Período:</b> ${n.inicio} al ${n.fin}</p>
+
+ <hr style="margin:15px 0">
+
+ <h4>DEVENGADOS</h4>
+
+ <p>Salario básico: ${dinero(n.salarioBase)}</p>
+ <p>Auxilio transporte: ${dinero(n.auxilio)}</p>
+ <p>Horas extras diurnas: ${dinero(n.pagoExtraD)}</p>
+ <p>Horas extras nocturnas: ${dinero(n.pagoExtraN)}</p>
+ <p>Recargo nocturno: ${dinero(n.pagoNocturno)}</p>
+ <p>Recargos dominicales: ${dinero(n.pagoDominical+n.pagoDominicalN)}</p>
+ <p>Bonificaciones: ${dinero(n.bonificaciones)}</p>
+ <p>Comisiones: ${dinero(n.comisiones)}</p>
+ <p>Otros devengados: ${dinero(n.otros)}</p>
+
+ <h4>Total devengado: ${dinero(n.devengado)}</h4>
+
+ <hr style="margin:15px 0">
+
+ <h4>DEDUCCIONES</h4>
+
+ <p>Salud: ${dinero(n.salud)}</p>
+ <p>Pensión: ${dinero(n.pension)}</p>
+ <p>Anticipos: ${dinero(n.anticipos)}</p>
+ <p>Otros descuentos: ${dinero(n.otrosDescuentos)}</p>
+
+ <h4>Total deducciones: ${dinero(n.deducciones)}</h4>
+
+ <hr style="margin:15px 0">
+
+ <h2 style="color:#047857">
+ NETO A PAGAR: ${dinero(n.neto)}
+ </h2>
+
+ <hr style="margin:15px 0">
+
+ <h4>PRESTACIONES SOCIALES ESTIMADAS</h4>
+
+ <p>Prima: ${dinero(n.prima)}</p>
+ <p>Cesantías: ${dinero(n.cesantias)}</p>
+ <p>Intereses de cesantías: ${dinero(n.interesesCesantias)}</p>
+ <p>Vacaciones: ${dinero(n.vacaciones)}</p>
+
+ <p class="muted">
+ Valores de prestaciones informativos, no incluidos en el neto de pago.
+ </p>
+
+ <br>
+
+ <p>Firma del trabajador: ________________________</p>
+ <p>Firma del empleador: ________________________</p>
+
+ `;
+
+}
+
+function imprimirComprobanteActual(){
+
+ if(!calculoActual){
+  alert("Primero calcula la nómina.");
+  return;
+ }
+
+ crearComprobante(calculoActual);
+ mostrar("comprobante");
+ window.print();
+
+}
+
+// ==================================
+// EXPORTAR CSV PARA EXCEL
+// ==================================
+
+function exportarCSV(){
+
+ if(!nominas.length){
+  alert("No hay registros para exportar.");
+  return;
+ }
+
+ const columnas=[
+ "Empleado","Documento","Fecha inicial","Fecha final",
+ "Salario base","Auxilio","Extras diurnas","Extras nocturnas",
+ "Recargo nocturno","Recargo dominical","Devengado","IBC",
+ "Salud","Pensión","Deducciones","Neto","Prima","Cesantías",
+ "Intereses cesantías","Vacaciones"
+ ];
+
+ const filas=nominas.map(n=>[
+ n.empleado,n.documento,n.inicio,n.fin,
+ n.salarioBase,n.auxilio,n.pagoExtraD,n.pagoExtraN,
+ n.pagoNocturno,n.pagoDominical+n.pagoDominicalN,
+ n.devengado,n.ibc,n.salud,n.pension,n.deducciones,n.neto,
+ n.prima,n.cesantias,n.interesesCesantias,n.vacaciones
+ ]);
+
+ const contenido=[columnas,...filas]
+ .map(f=>f.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(";"))
+ .join("\r\n");
+
+ const blob=new Blob(["\uFEFF"+contenido],{
+  type:"text/csv;charset=utf-8"
+ });
+
+ const url=URL.createObjectURL(blob);
+
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="historial_nomina.csv";
+ a.click();
+
+ URL.revokeObjectURL(url);
+
+}
+
+// ==================================
+// CONFIGURACIÓN
+// ==================================
+
+function cargarConfiguracion(){
+
+ document.getElementById("cfgSalario").value=config.salarioMinimo;
+ document.getElementById("cfgAuxilio").value=config.auxilio;
+ document.getElementById("cfgSalud").value=config.salud;
+ document.getElementById("cfgPension").value=config.pension;
+ document.getElementById("cfgNocturno").value=config.nocturno;
+ document.getElementById("cfgExtraD").value=config.extraD;
+ document.getElementById("cfgExtraN").value=config.extraN;
+ document.getElementById("cfgDominical").value=config.dominical;
+ document.getElementById("cfgJornada").value=config.jornada;
+ document.getElementById("cfgDivisor").value=config.divisor;
+
+}
+
+function guardarConfiguracion(){
+
+ const campos={
+ salarioMinimo:"cfgSalario",
+ auxilio:"cfgAuxilio",
+ salud:"cfgSalud",
+ pension:"cfgPension",
+ nocturno:"cfgNocturno",
+ extraD:"cfgExtraD",
+ extraN:"cfgExtraN",
+ dominical:"cfgDominical",
+ jornada:"cfgJornada",
+ divisor:"cfgDivisor"
+ };
+
+ for(const [key,id] of Object.entries(campos)){
+
+  const value=Number(document.getElementById(id).value);
+
+  if(!Number.isFinite(value)||value<0||
+  ((key==="divisor"||key==="jornada")&&value===0)){
+   alert("Verifica los parámetros de configuración.");
+   return;
+  }
+
+  config[key]=value;
+
+ }
+
+ if(config.salud>100||config.pension>100){
+  alert("Los porcentajes no pueden superar 100.");
+  return;
+ }
+
+ guardarDatos();
+ cargarConfiguracion();
+ actualizar();
+
+ alert("Configuración actualizada.");
+
+}
+
+function restaurarConfiguracion(){
+
+ if(!confirm("¿Restaurar los valores iniciales?"))return;
+
+ config={...valoresIniciales};
+
+ guardarDatos();
+ cargarConfiguracion();
+ actualizar();
+
+}
+
+// ==================================
+// INICIAR SISTEMA
+// ==================================
+
+cargarConfiguracion();
+actualizar();
+
+</script>
+</body>
+</html>
